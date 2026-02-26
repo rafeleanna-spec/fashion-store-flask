@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Adicionar Novo Produto</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <div class="mb-3">
+            <label>Nome</label>
+            <input type="text" name="nome" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Descrição</label>
+            <textarea name="descricao" class="form-control" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Preço</label>
+            <input type="number" step="0.01" name="preco" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Imagem do Produto</label>
+            <input type="file" name="imagem" class="form-control" accept="image/*" required>
+        </div>
+        <div class="mb-3">
+    <label>Estoque</label>
+    <input type="number" name="estoque" class="form-control" min="0" required>
+</div>
+
+        <button type="submit" class="btn btn-dark">
+            Salvar Produto
+        </button>
+
+    </form>
+</div>
+{% endblock %}

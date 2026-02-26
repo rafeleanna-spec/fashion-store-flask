@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>Compra realizada com sucesso! 🎉</h2>
+    <a href="{{ url_for('main.produtos') }}" class="btn btn-primary mt-3">
+        Continuar Comprando
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Seu Carrinho</h2>
+
+{% if items %}
+
+    {% for item in items %}
+        <div class="cart-item">
+            <img src="{{ url_for('static', filename='uploads/' + item.product.imagem) }}" width="100">
+            <h3>{{ item.product.nome }}</h3>
+            <p>Quantidade: {{ item.quantidade }}</p>
+            <p>Preço: R$ {{ item.product.preco }}</p>
+            <hr>
+        </div>
+    {% endfor %}
+
+    <h3>Total: R$ {{ total }}</h3>
+
+{% else %}
+    <p>Seu carrinho está vazio.</p>
+{% endif %}
+{% for item in items %}
+<div class="card mb-3 p-3">
+    <h5>{{ item.product.nome }}</h5>
+    <p>Preço: R$ {{ item.product.preco }}</p>
+    <p>Quantidade: {{ item.quantidade }}</p>
+
+    <a href="{{ url_for('main.remove_from_cart', item_id=item.id) }}"
+       class="btn btn-danger btn-sm">
+       Remover
+    </a>
+</div>
+{% endfor %}
+
+<h4>Total: R$ {{ total }}</h4>
+<a href="{{ url_for('main.checkout') }}" class="btn btn-success">
+    Finalizar Compra
+</a>
+{% endblock %}

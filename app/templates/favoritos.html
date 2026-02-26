@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Meus Favoritos</h2>
+
+    <div class="row">
+        {% for produto in produtos %}
+            <div class="col-md-4">
+                <h5>{{ produto.nome }}</h5>
+                <p>R$ {{ produto.preco }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

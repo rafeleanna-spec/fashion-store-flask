@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>💳 Pagamento do Pedido #{{ pedido.id }}</h2>
+
+<p>Total: <strong>R$ {{ pedido.total }}</strong></p>
+<p>Status: {{ pedido.status }}</p>
+
+<hr>
+
+<h4>Simulação de Cartão</h4>
+
+<form method="POST"
+      action="{{ url_for('main.processar_pagamento', pedido_id=pedido.id) }}">
+
+    <input type="text" class="form-control mb-2"
+           placeholder="Número do Cartão" required>
+
+    <input type="text" class="form-control mb-2"
+           placeholder="Nome no Cartão" required>
+
+    <button type="submit" class="btn btn-success">
+        Pagar Agora
+    </button>
+
+</form>
+
+{% endblock %}

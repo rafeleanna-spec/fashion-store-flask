@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <h2>Painel Administrativo</h2>
+
+    <div class="col-md-3">
+    <div class="card p-4 text-center">
+        <h6 class="text-muted">Usuários</h6>
+        <h2 class="fw-bold">{{ total_usuarios }}</h2>
+    </div>
+</div>
+
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Produtos</h6>
+<h2 class="fw-bold">{{ total_produtos }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Pedidos</h6>
+<h2 class="fw-bold">{{ total_pedidos }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+                <h6 class="text-muted">Total Arrecadado</h6>
+<h2 class="fw-bold">R$ {{ total_arrecadado }}</h2>
+                <a href="{{ url_for('admin.novo_produto') }}" class="btn btn-primary">
+    Adicionar Produto
+</a>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="my-4">
+
+    <h4>Últimos Pedidos</h4>
+
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuário</th>
+                <th>Total</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for pedido in pedidos %}
+<tr>
+    <td>{{ pedido.id }}</td>
+    <td>R$ {{ pedido.total }}</td>
+    <td>{{ pedido.status }}</td>
+
+    <td>
+        <form method="POST"
+              action="{{ url_for('admin.alterar_status_pedido', pedido_id=pedido.id) }}">
+
+            <select name="status">
+                <option>Pendente</option>
+                <option>Pago</option>
+                <option>Enviado</option>
+                <option>Entregue</option>
+                <option>Cancelado</option>
+            </select>
+
+            <button type="submit" class="btn btn-sm btn-primary">
+                Atualizar
+            </button>
+
+        </form>
+    </td>
+</tr>
+{% endfor %}
+        </tbody>
+    </table>
+
+    <hr class="my-4">
+
+<h4>Produtos Cadastrados</h4>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Imagem</th>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for produto in produtos.items %}
+        <tr>
+            <td>{{ produto.id }}</td>
+            <td>
+                <img src="{{ url_for('static', filename='uploads/' + produto.imagem) }}" width="60">
+            </td>
+            <td>{{ produto.nome }}</td>
+            <td>R$ {{ produto.preco }}</td>
+            <td>
+                <a href="{{ url_for('admin.editar_produto', id=produto.id) }}"
+                   class="btn btn-warning btn-sm">
+                   ✏ Editar
+                </a>
+                <a href="{{ url_for('admin.editar_produto', id=produto.id) }}"
+   class="btn btn-sm btn-warning">
+   ✏ Editar
+</a>
+
+<form action="{{ url_for('admin.excluir_produto', id=produto.id) }}"
+      method="POST"
+      style="display:inline;"
+      onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
+
+    <button type="submit" class="btn btn-outline-dark">
+        🗑 Excluir
+    </button>
+</form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<nav class="mt-3">
+  <ul class="pagination">
+
+    {% if produtos.has_prev %}
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('admin.dashboard', page=produtos.prev_num) }}">
+           Anterior
+        </a>
+      </li>
+    {% endif %}
+
+    {% if produtos.has_next %}
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('admin.dashboard', page=produtos.next_num) }}">
+           Próxima
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+</nav>
+</div>
+<h2>Métricas Gerais</h2>
+<ul>
+    <li>Total de Produtos: {{ total_produtos }}</li>
+    <li>Total de Usuários: {{ total_usuarios }}</li>
+    <li>Total de Carrinhos Criados: {{ total_carrinhos }}</li>
+</ul>
+
+<hr>
+
+<h2>❌ Produtos Esgotados</h2>
+{% if produtos_sem_estoque %}
+    <ul>
+        {% for produto in produtos_sem_estoque %}
+            <li>{{ produto.nome }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Nenhum produto esgotado 🎉</p>
+{% endif %}
+
+<hr>
+
+<h2>⚠️ Produtos com Estoque Baixo (≤ 5)</h2>
+{% if produtos_estoque_baixo %}
+    <ul>
+        {% for produto in produtos_estoque_baixo %}
+            <li>{{ produto.nome }} ({{ produto.estoque }} restantes)</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Todos produtos com estoque saudável 💪</p>
+{% endif %}
+
+{% endblock %}

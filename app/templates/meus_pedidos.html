@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>📦 Meus Pedidos</h2>
+
+{% if pedidos %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido.id }}</td>
+                <td>R$ {{ pedido.total }}</td>
+                <td>{{ pedido.status }}</td>
+                <td>{{ pedido.created_at.strftime('%d/%m/%Y') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Você ainda não fez pedidos.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="GET" action="{{ url_for('main.produtos') }}" class="mb-4">
+  <div class="input-group">
+    <input type="text"
+           name="q"
+           class="form-control"
+           placeholder="Buscar produto..."
+           value="{{ busca }}">
+
+    <button class="btn btn-dark" type="submit">
+      Buscar
+    </button>
+    <form method="GET">
+    <input type="text" name="q" placeholder="Buscar produto..." value="{{ busca }}">
+
+    <select name="categoria">
+        <option value="">Todas as categorias</option>
+
+        {% for cat in categorias %}
+            <option value="{{ cat }}"
+                {% if cat == categoria_selecionada %}selected{% endif %}>
+                {{ cat }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Filtrar</button>
+</form>
+  </div>
+</form>
+
+<h2>Nossos Produtos</h2>
+
+<div class="produtos-container">
+    {% for produto in produtos.items %}
+        <div class="card">
+            {% if produto.imagem %}
+    <img src="{{ url_for('static', filename='uploads/' + produto.imagem) }}">
+{% else %}
+    <img src="{{ url_for('static', filename='uploads/sem-imagem.png') }}">
+{% endif %}
+            <h3>{{ produto.nome }}</h3>
+            <p>{{ produto.descricao }}</p>
+            <strong>R$ {{ "%.2f"|format(produto.preco) }}</strong>
+
+             {% if produto.estoque > 0 %}
+    <p>Em estoque: {{ produto.estoque }}</p>
+{% else %}
+    <p style="color:red;">Produto esgotado</p>
+{% endif %}
+      
+
+            <a href="{{ url_for('main.add_to_cart', product_id=produto.id) }}" class="btn-carrinho">
+                Adicionar ao carrinho
+            </a>
+
+            {% if current_user.is_authenticated %}
+    <a href="{{ url_for('main.favoritar', produto_id=produto.id) }}"
+       class="btn btn-outline-danger">
+       {% if produto in current_user.favoritos %}
+           ❤️ Remover
+       {% else %}
+           🤍 Favoritar
+       {% endif %}
+    </a>
+{% endif %}
+        </div>
+    {% else %}
+        <p>Nenhum produto cadastrado.</p>
+    {% endfor %}
+</div>
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+
+    {% if produtos.has_prev %}
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('main.produtos', page=num, q=busca) }}"
+           Anterior
+        </a>
+      </li>
+    {% endif %}
+
+    {% for num in produtos.iter_pages() %}
+      {% if num %}
+        <li class="page-item {% if num == produtos.page %}active{% endif %}">
+          <a class="page-link"
+             href="{{ url_for('main.produtos', page=num, q=busca) }}"
+             {{ num }}
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if produtos.has_next %}
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('main.produtos', page=produtos.next_num) }}">
+           Próxima
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+</nav>
+
+{% endblock %}

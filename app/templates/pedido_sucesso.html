@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>✅ Pagamento aprovado!</h2>
+
+<p>Seu pedido #{{ pedido.id }} foi pago com sucesso.</p>
+<p>Status atual: <strong>{{ pedido.status }}</strong></p>
+
+<a href="{{ url_for('main.meus_pedidos') }}"
+   class="btn btn-primary">
+   Ver Meus Pedidos
+</a>
+
+{% endblock %}
